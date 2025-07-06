@@ -9,9 +9,9 @@ not plan to do so, the following guide assumes a Linux environment.
 
 ## Requirements
 
-- GCC
-- xorriso
-- mtools
+- A GNU-compatible C toolchain capable of generating x86-64 ELF objects.
+- make 
+- xorriso - For building the ISO
 
 ## Building the ISO
 
