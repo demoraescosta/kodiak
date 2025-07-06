@@ -88,6 +88,7 @@ limine/limine:
 		LDFLAGS="$(HOST_LDFLAGS)" \
 		LIBS="$(HOST_LIBS)"
 
+$(NAME)-iso: $(NAME).iso
 $(NAME).iso: limine/limine bin/$(NAME)
 	rm -rf iso_root
 	mkdir -p iso_root/boot
