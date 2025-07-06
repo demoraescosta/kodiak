@@ -1,6 +1,6 @@
 # Kodiak
 
-Kodiak is a small work-in-progress 32-bit kernel made to learn about OS development.
+Kodiak is a small work-in-progress 64-bit kernel.
 
 ## Building
 
@@ -9,8 +9,7 @@ not plan to do so, the following guide assumes a Linux environment.
 
 ## Requirements
 
-- A functional i686-elf-gnu toolchain (gas, gcc, ld, etc...)
-- grub
+- GCC
 - xorriso
 - mtools
 
