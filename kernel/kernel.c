@@ -132,8 +132,10 @@ void kmain(void) {
             8 // margin
             );
     
-    const char* msg = "Hello Kodiak!\n";
+    const char* msg = " \n    ###   s###s  ### \n  ##   ##s     s#   # \n  #   #          # ## \n   +#s   .  _   * # \n    #      s =s    # \n    #     #  * #   # \n     #b    #___# _s# \n    #  #s_s#####s  # \n   # -#_            # \n  # -#_             #s \n #          #        # \ns#     #     # s      # \n#       #     #       # \n#    #####o    ##      ###s \n s  #     #      s     #   # \n  ##s    #s_      #     #  # \n     ####   #####s s####s## ";
     flanterm_write(ctx, msg, strlen(msg));
 
+    const char* msg2 = "\n\nHello Kodiak!\n";
+    flanterm_write(ctx, msg2, strlen(msg2));
     hcf();
 }
