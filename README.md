@@ -2,6 +2,8 @@
 
 Kodiak is a small work-in-progress 64-bit kernel.
 
+The kernel currently uses [Limine](https://github.com/limine-bootloader/limine) as its boot protocol and bootloader.
+
 ## Building
 
 I have not tested yet how Kodiak builds on non-linux systems and I (for now) do
