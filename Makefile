@@ -6,9 +6,9 @@ CC := cc
 LD := ld
 ASM := nasm
 
-CFLAGS := -g -O2 -pipe
+CFLAGS := -g -O2 -pipe -mcmodel=kernel
 ASMFLAGS := -F dwarf -g
-LDFLAGS := 
+LDFLAGS :=
 LIBS :=
 
 # Toolchain for building limine
