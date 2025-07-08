@@ -5,18 +5,10 @@
 
 #include "types.h"
 
-#include "terminal/flanterm.h"
-#include "terminal/backends/fb.h"
+/* #include "fb/flanterm/flanterm.h" */
+/* #include "fb/flanterm/backends/fb.h" */
 
-typedef uint8_t u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
-
-typedef int8_t i8;
-typedef int16_t i16;
-typedef int32_t i32;
-typedef int64_t i64;
+#include "fb/fb.h"
 
 __attribute__((used, section(".limine_requests")))
 static volatile LIMINE_BASE_REVISION(3);
@@ -84,15 +76,6 @@ int memcmp(const void *s1, const void *s2, size_t n) {
     return 0;
 }
 
-// TODO: this sucks!!
-size_t strlen(const char *str)
-{
-	const char *s;
-
-	for (s = str; *s; ++s)
-		;
-	return (s - str);
-}
 // halt catch and fire
 static void hcf(void) {
     for (;;) {
@@ -110,32 +93,29 @@ void kmain(void) {
         hcf();
     }
 
-    struct limine_framebuffer* framebuffer = framebuffer_request.response->framebuffers[0];
+	struct limine_framebuffer *limine_fb = framebuffer_request.response->framebuffers[0];
 
-    /* for (size_t i = 0; i < 255; i++) { */
-    /*     volatile uint32_t *fb_ptr = framebuffer->address; */
-    /*     fb_ptr[i * (framebuffer->pitch / 4) + i] = 0xffffff; */
-    /* } */
+	framebuffer fb = {0};
 
-    struct flanterm_context* ctx = flanterm_fb_init(
-            NULL, NULL, // TODO: implement malloc and free
-            framebuffer->address, framebuffer->width, framebuffer->height, framebuffer->pitch,
-            framebuffer->red_mask_size, framebuffer->red_mask_shift,
-            framebuffer->green_mask_size, framebuffer->green_mask_shift,
-            framebuffer->blue_mask_size, framebuffer->blue_mask_shift,
-            NULL, // no canvas
-            NULL, NULL, // default ansi colors
-            NULL, NULL, // "
-            NULL, NULL, // "
-            NULL, 0, 0, 0, // deafult font, font widht, height and spacing
-            0, 0, // scale_x, scale_y
-            8 // margin
-            );
-    
-    const char* msg = " \n    ###   s###s  ### \n  ##   ##s     s#   # \n  #   #          # ## \n   +#s   .  _   * # \n    #      s =s    # \n    #     #  * #   # \n     #b    #___# _s# \n    #  #s_s#####s  # \n   # -#_            # \n  # -#_             #s \n #          #        # \ns#     #     # s      # \n#       #     #       # \n#    #####o    ##      ###s \n s  #     #      s     #   # \n  ##s    #s_      #     #  # \n     ####   #####s s####s## ";
-    flanterm_write(ctx, msg, strlen(msg));
+	fb.address = (uint32_t *)limine_fb->address;
+	fb.pitch = limine_fb->pitch;
+	fb.width = limine_fb->width;
+	fb.height = limine_fb->height;
+	fb.text_color = 0x00eee8d5;
+	fb.text_x = 0;
+	fb.text_y = 0;
+	fb.bg_color = 0x00124560;
+	fb.color_masks[0].offset = limine_fb->red_mask_shift;
+	fb.color_masks[0].length = limine_fb->red_mask_size;
+	fb.color_masks[1].offset = limine_fb->green_mask_shift;
+	fb.color_masks[1].length = limine_fb->green_mask_size;
+	fb.color_masks[2].offset = limine_fb->blue_mask_shift;
+	fb.color_masks[2].length = limine_fb->blue_mask_size;
 
-    const char* msg2 = "\n\nHello Kodiak!\n";
-    flanterm_write(ctx, msg2, strlen(msg2));
+	framebuffer_init(&fb);
+
+    framebuffer_puts(" \n    ###   s###s  ### \n  ##   ##s     s#   # \n  #   #          # ## \n   +#s   .  _   ' # \n    #      s =s    # \n    #     #  * #   # \n     #b    #___# _s# \n    #  #s_s#####s  # \n   # -#_            # \n  # -#_             #s \n #          #        # \ns#     #     # s      # \n#       #     #       # \n#    #####o    ##      ###s \n s  #     #      s     #   # \n  ##s    #s_      #     #  # \n     ####   #####s s####s## ");
+    framebuffer_puts("\n\nHello Kodiak!\n");
+
     hcf();
 }
