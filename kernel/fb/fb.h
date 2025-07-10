@@ -1,5 +1,5 @@
-#ifndef __FB_H
-#define __FB_H
+#ifndef FB_H
+#define FB_H
 
 #include <fb/flanterm/flanterm.h>
 #include "types.h"
