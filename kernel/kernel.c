@@ -3,10 +3,12 @@
 #include <limine.h>
 
 #include <types.h>
+#include <klibc/string.h>
 
 #include <fb/fb.h>
 #include <sys/gdt.h>
 #include <sys/isr.h>
+#include <debug/debug.h>
 
 __attribute__((used, section(".limine_requests")))
 static volatile LIMINE_BASE_REVISION(3);
@@ -23,57 +25,6 @@ static volatile LIMINE_REQUESTS_START_MARKER;
 __attribute__((used, section(".limine_requests_end")))
 static volatile LIMINE_REQUESTS_END_MARKER;
 
-void *memcpy(void *dest, const void *src, size_t n) {
-    u8 *pdest = (u8 *)dest;
-    const u8 *psrc = (const u8 *)src;
-
-    for (size_t i = 0; i < n; i++) {
-        pdest[i] = psrc[i];
-    }
-
-    return dest;
-}
-
-void *memset(void *s, int c, size_t n) {
-    u8 *p = (u8 *)s;
-
-    for (size_t i = 0; i < n; i++) {
-        p[i] = (u8)c;
-    }
-
-    return s;
-}
-
-void *memmove(void *dest, const void *src, size_t n) {
-    u8 *pdest = (u8 *)dest;
-    const u8 *psrc = (const u8 *)src;
-
-    if (src > dest) {
-        for (size_t i = 0; i < n; i++) {
-            pdest[i] = psrc[i];
-        }
-    } else if (src < dest) {
-        for (size_t i = n; i > 0; i--) {
-            pdest[i-1] = psrc[i-1];
-        }
-    }
-
-    return dest;
-}
-
-int memcmp(const void *s1, const void *s2, size_t n) {
-    const u8 *p1 = (const u8 *)s1;
-    const u8 *p2 = (const u8 *)s2;
-
-    for (size_t i = 0; i < n; i++) {
-        if (p1[i] != p2[i]) {
-            return p1[i] < p2[i] ? -1 : 1;
-        }
-    }
-
-    return 0;
-}
-
 // halt catch and fire
 static void hcf(void) {
     for (;;) {
@@ -85,7 +36,9 @@ void kmain(void) {
     asm("cli");
 
     if (LIMINE_BASE_REVISION_SUPPORTED == false)
+    {
         hcf();
+    }
 
 	struct limine_framebuffer *limine_fb = framebuffer_request.response->framebuffers[0];
 
@@ -117,5 +70,8 @@ void kmain(void) {
     framebuffer_puts("[INFO]: Kernel setup done\n");
 
     framebuffer_puts("Hello Kodiak!\n");
+
+    kprintf("printf test %s\n", "hello printf!");
+
     hcf();
 }

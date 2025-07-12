@@ -37,10 +37,10 @@ CFLAGS += \
     -march=x86-64 \
     -mno-80387 \
     -mno-mmx \
-    -mno-sse \
-    -mno-sse2 \
     -mno-red-zone \
     -mcmodel=kernel
+    # -mno-sse \
+    # -mno-sse2 \
 
 # preprocessor flags
 CPPFLAGS := \

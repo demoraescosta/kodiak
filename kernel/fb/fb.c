@@ -1,6 +1,7 @@
 #include <fb/fb.h>
 
 #include <fb/flanterm/backends/fb.h>
+#include <klibc/string.h>
 #include "limine.h"
 
 struct framebuffer_t g_fb;
@@ -42,16 +43,6 @@ void framebuffer_clear(u32 fg, u32 bg)
 {
     (void)fg;
     (void)bg;
-}
-
-// TODO: this sucks!!
-size_t strlen(const char *str)
-{
-	const char *s;
-
-	for (s = str; *s; ++s)
-		;
-	return (s - str);
 }
 
 void framebuffer_puts(char* string)
