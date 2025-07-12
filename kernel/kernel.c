@@ -1,14 +1,12 @@
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <limine.h>
 
-#include "types.h"
+#include <types.h>
 
-/* #include "fb/flanterm/flanterm.h" */
-/* #include "fb/flanterm/backends/fb.h" */
-
-#include "fb/fb.h"
+#include <fb/fb.h>
+#include <sys/gdt.h>
+#include <sys/isr.h>
 
 __attribute__((used, section(".limine_requests")))
 static volatile LIMINE_BASE_REVISION(3);
@@ -84,19 +82,14 @@ static void hcf(void) {
 }
 
 void kmain(void) {
-    if (LIMINE_BASE_REVISION_SUPPORTED == false) {
-        hcf();
-    }
+    asm("cli");
 
-    if (framebuffer_request.response == NULL
-     || framebuffer_request.response->framebuffer_count < 1) {
+    if (LIMINE_BASE_REVISION_SUPPORTED == false)
         hcf();
-    }
 
 	struct limine_framebuffer *limine_fb = framebuffer_request.response->framebuffers[0];
 
-	framebuffer fb = {0};
-
+	framebuffer_t fb = {0};
 	fb.address = (uint32_t *)limine_fb->address;
 	fb.pitch = limine_fb->pitch;
 	fb.width = limine_fb->width;
@@ -114,8 +107,15 @@ void kmain(void) {
 
 	framebuffer_init(&fb);
 
-    framebuffer_puts(" \n    ###   s###s  ### \n  ##   ##s     s#   # \n  #   #          # ## \n   +#s   .  _   ' # \n    #      s =s    # \n    #     #  * #   # \n     #b    #___# _s# \n    #  #s_s#####s  # \n   # -#_            # \n  # -#_             #s \n #          #        # \ns#     #     # s      # \n#       #     #       # \n#    #####o    ##      ###s \n s  #     #      s     #   # \n  ##s    #s_      #     #  # \n     ####   #####s s####s## ");
-    framebuffer_puts("\n\nHello Kodiak!\n");
+    framebuffer_puts("[INFO]: Initialized framebuffer\n");
 
+    gdt_init();
+    framebuffer_puts("[INFO]: GDT Initialized\n");
+    isr_init();
+    framebuffer_puts("[INFO]: IDT populated\n");
+
+    framebuffer_puts("[INFO]: Kernel setup done\n");
+
+    framebuffer_puts("Hello Kodiak!\n");
     hcf();
 }
