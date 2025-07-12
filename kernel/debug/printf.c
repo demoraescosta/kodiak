@@ -50,7 +50,7 @@
 #ifndef PRINTF_NTOA_BUFFER_SIZE
 #define PRINTF_NTOA_BUFFER_SIZE    32U
 #endif
-
+  
 // 'ftoa' conversion buffer size, this must be big enough to hold one converted
 // float number including padded zeros (dynamically created on stack)
 // default: 32 byte
@@ -60,6 +60,7 @@
 
 // support for the floating point type (%f)
 // default: activated
+#define PRINTF_DISABLE_SUPPORT_FLOAT // TODO: float support
 #ifndef PRINTF_DISABLE_SUPPORT_FLOAT
 #define PRINTF_SUPPORT_FLOAT
 #endif
