@@ -1,13 +1,17 @@
 NAME := kodiak
 
-QEMUFLAGS := -m 2G
+QEMUFLAGS := -m 2G \
+			 -no-reboot \
+			 -debugcon stdio \
+			 -d int \
+			 # -s -S
 
 CC := cc
 LD := ld
 ASM := nasm
 
-CFLAGS := -g -O2 -pipe -mcmodel=kernel
-ASMFLAGS := -F dwarf -g
+CFLAGS := -g -O2 -pipe 
+ASMFLAGS := -g
 LDFLAGS :=
 LIBS :=
 
@@ -27,6 +31,8 @@ CFLAGS += \
     -fno-stack-check \
     -fno-lto \
     -fno-PIC \
+    -ffunction-sections \
+    -fdata-sections \
     -m64 \
     -march=x86-64 \
     -mno-80387 \
@@ -34,17 +40,21 @@ CFLAGS += \
     -mno-sse \
     -mno-sse2 \
     -mno-red-zone \
+    -mcmodel=kernel
 
 # preprocessor flags
 CPPFLAGS := \
     -I kernel \
+    -isystem freestnd-c-hdrs \
+    $(CPPFLAGS) \
     -DLIMINE_API_REVISION=3 \
     -MMD \
-    -MP	
+    -MP
 
-NASMFLAGS += \
-    -Wall \
-    -f elf64
+ASMFLAGS += \
+			 -felf64 \
+			 -g \
+			 -Wall 
 
 LDFLAGS += \
     -m elf_x86_64 \
