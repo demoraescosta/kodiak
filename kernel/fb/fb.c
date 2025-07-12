@@ -3,10 +3,10 @@
 #include <fb/flanterm/backends/fb.h>
 #include "limine.h"
 
-struct framebuffer g_fb;
+struct framebuffer_t g_fb;
 static struct flanterm_context* g_ctx;
 
-void framebuffer_init(framebuffer* fb)
+void framebuffer_init(framebuffer_t* fb)
 {
     g_fb.address = fb->address;
     g_fb.pitch = fb->pitch;

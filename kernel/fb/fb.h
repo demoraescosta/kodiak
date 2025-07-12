@@ -12,7 +12,7 @@ struct fb_bitfield {
 						/* right */
 };
 
-typedef struct framebuffer {
+typedef struct framebuffer_t {
 	u16 width, height;
 	u16 text_width, text_height;
 	u32 text_color;
@@ -22,9 +22,9 @@ typedef struct framebuffer {
 	size_t text_x, text_y;
 	struct fb_bitfield color_masks[3];
 	struct flanterm_context *ctx;
-} framebuffer;
+} framebuffer_t;
 
-void framebuffer_init(framebuffer* fb);
+void framebuffer_init(framebuffer_t* fb);
 void framebuffer_clear(u32 fg, u32 bg);
 void framebuffer_puts(char* string);
 void framebuffer_putchar(char c);
